@@ -1,0 +1,149 @@
+<template>
+    <card header-classes="bg_transparent" class="people-feel-unwell">
+        <div class="row" slot="header">
+            <div class="col">
+                <h5 class="h5 mb-0 title">People who feel unwell</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-15 col-md-6">
+                <div class="row">
+                    <div class="col-15 people-reported">
+                        People reported
+                    </div>
+                    <div class="col-15 pt-1 number-people">
+                        12,004
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-15">
+                        <div class="row">
+                            <div class="col-15 option-tag">
+                                <span class="dot-2"></span>
+                                Fell ill
+                            </div>
+                            <div class="col-15 option-number-tag">
+                                4,213
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-15">
+                        <div class="row">
+                            <div class="col-15 option-tag">
+                                <span class="dot-1"></span>
+                                Fell tired or exhausted
+                            </div>
+                            <div class="col-15 option-number-tag">
+                                7,357
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-15 col-md-9">
+                <div class="people-fell-unwell-chart" ref="peoplefellunwellchart"></div>
+            </div>          
+        </div>
+    </card>
+</template>
+
+<script>
+import * as am4core from "@amcharts/amcharts4/core"
+import * as am4charts from "@amcharts/amcharts4/charts"
+import am4themes_material from "@amcharts/amcharts4/themes/material"
+
+am4core.useTheme(am4themes_material)
+
+    export default {
+        methods: {
+            loadChart() {
+                let chart = am4core.create(this.$refs.peoplefellunwellchart, am4charts.XYChart)
+
+                chart.data = [
+                    {
+                        'status': 'Fell ill',
+                        'people': 36.41,
+                        'color': '#f57a6e'
+                    },
+                    {
+                        'status': 'Fell tired or exhausted',
+                        'people': 63.59,
+                        'color': '#50cca8'
+                    }
+                ]
+
+                let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+                categoryAxis.dataFields.category = "status"
+                categoryAxis.renderer.grid.template.location = 0;
+                categoryAxis.renderer.minGridDistance = 20;
+
+                let label = categoryAxis.renderer.labels.template
+                label.wrap = true;
+                label.fill = '#c6c7c8'
+                label.maxWidth = 120
+                label.fontSize = '11'
+
+                let valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
+                valueAxis.title.text = "Patients %";
+                valueAxis.title.fontSize = '12'
+                valueAxis.title.fill = '#c6c7c8'
+                valueAxis.fill = '#c6c7c8'
+                valueAxis.fontSize = '12'
+                valueAxis.max = 100;
+
+                var series = chart.series.push(new am4charts.ColumnSeries());
+                series.dataFields.valueY = "people";
+                series.dataFields.categoryX = "status";
+                series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+                
+                var columnTemplate = series.columns.template;
+                columnTemplate.propertyFields.fill = "color";
+                columnTemplate.propertyFields.stroke = "color"
+            }
+        },
+        mounted() {
+            this.loadChart()
+        }
+    }
+</script>
+
+<style>
+.people-feel-unwell .title {
+    font-size: 85%;
+}
+
+.people-feel-unwell .card-body {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 0;
+}
+
+.people-feel-unwell .people-reported {
+    font-weight: 300;
+    color: black;
+}
+
+.people-feel-unwell .number-people {
+    font-weight: bolder;
+    font-size: 30px;
+    color: black;
+}
+
+.people-feel-unwell  .option-tag {
+    font-size: 11px;
+    color: black;
+}
+
+.people-feel-unwell .option-number-tag {
+    color: black;
+    font-weight: 500;
+    font-size: 21px;
+}
+
+.people-fell-unwell-chart {
+    height: 300px;
+}
+</style>

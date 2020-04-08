@@ -1,0 +1,7 @@
+.ul-legend {
+  list-style-type: none;
+}
+
+.ul-legend li::before {
+  // content: url(/img/icons/common/legend_bullet.svg);
+}
