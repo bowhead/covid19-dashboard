@@ -80,7 +80,7 @@
         </template>
       </base-dropdown> -->
 
-      <base-dropdown class="nav-link pr-0" position="right">
+      <!-- <base-dropdown class="nav-link pr-0" position="right">
         <div class="media align-items-center" slot="title">
           <span class="avatar avatar-sm rounded-circle bg-default">
             <i class="fa fa-window-restore"></i>
@@ -93,7 +93,7 @@
             <span>Logout</span>
           </a>
         </template>
-      </base-dropdown>
+      </base-dropdown> -->
     </div>
   </base-nav>
 </template>
