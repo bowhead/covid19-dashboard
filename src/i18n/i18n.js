@@ -28,6 +28,7 @@ export default new VueI18n({
                 search: 'Search'
             },
             dashboard: {
+                noData: 'No data available',
                 peopleTiredExhausted: 'Symptoms of people who feel tired or exhausted',
                 peopleFeelUnwell: 'People who feel unwell',
                 generalSymptoms: 'General Symptoms',

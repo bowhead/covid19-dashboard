@@ -20,7 +20,14 @@
                 <label for="">Cº</label>
             </div>
             <div class="col-15">
-                <div class="people-have-fever-chart" ref="peoplehavefeverchart"></div>
+                <div v-if="peopleHaveFever.Stats.length > 0" class="people-have-fever-chart" ref="peoplehavefeverchart"></div>
+                <div v-if="peopleHaveFever.Stats.length === 0" class="no-data">
+                    <div class="row">
+                        <div class="col text-center">
+                            <h5 class="h5 mb-0">{{ $t('dashboard.noData') }}</h5>        
+                        </div>
+                    </div>
+                </div> 
             </div>
         </div>   
     </card>
@@ -93,7 +100,7 @@ am4core.useTheme(am4themes_material)
             }
         },
         mounted() {
-            this.loadChart()
+            //this.loadChart()
         },
         computed: {
             peopleHaveFever() {
@@ -120,5 +127,9 @@ am4core.useTheme(am4themes_material)
 
 .people-have-fever-chart {
     height: 270px;
+}
+
+.people-have-fever .no-data {
+    height: 270px !important;
 }
 </style>
