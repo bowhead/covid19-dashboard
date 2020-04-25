@@ -9,7 +9,7 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            redirect: 'Coronavirus Dashboard',
+            redirect: '/dashboard',
             component: DashboardLayout,
             children: [
                 {
