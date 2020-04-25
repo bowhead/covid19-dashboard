@@ -112,7 +112,15 @@ am4core.useTheme(am4themes_material)
                 obesity: 0,
                 copd: 0,
                 hypertension: 0,
-                other: 0
+                other: 0,
+                colorIllness: [
+                    {'illness': 'Asthma', 'color': '#f57a6e'},
+                    {'illness': 'Diabetes', 'color': '#c0d7e0'},
+                    {'illness': 'Obesity', 'color': '#acdcda'},
+                    {'illness': 'COPD', 'color': '#285150'},
+                    {'illness': 'Hypertension', 'color': '#fdcccd'},
+                    {'illness': 'Other', 'color': '#50cca8'}, 
+                ]
             }
         },
         methods: {
@@ -159,9 +167,17 @@ am4core.useTheme(am4themes_material)
                     ];
                 
                 let colorSet = new am4core.ColorSet();
-                colorSet.list = ['#c0d7e0', '#acdcda', '#50cca8', '#f57a6e', '#285150', '#fdcccd'].map(function(color) {
-                    return new am4core.color(color)
-                })
+
+                let self = this
+
+                if (this.coMorbitidites.Stats)
+                    colorSet.list = this.coMorbitidites.Stats.map(function(item) {
+
+                        let index = self.colorIllness.map(function(x){ return x.illness }).indexOf(item.illness)
+
+                        return new am4core.color(self.colorIllness[index].color)
+
+                    })
 
                 pieSeries.colors = colorSet
             }
@@ -176,6 +192,12 @@ am4core.useTheme(am4themes_material)
         },
         watch: {
             coMorbitidites: function(value) {
+                this.other = 0
+                this.hypertension = 0
+                this.copd = 0
+                this.obesity = 0
+                this.diabetes = 0
+                this.asthma = 0
                 value.Stats.forEach(item => {
                     switch(item.illness) {
                         case 'Asthma':

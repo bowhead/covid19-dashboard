@@ -74,7 +74,12 @@ am4core.useTheme(am4themes_material)
                 chart: null,
                 cough: 0,
                 aches: 0,
-                breath: 0
+                breath: 0,
+                colorSymptoms: [
+                    {'symptom': 'Cough', 'color': '#f57a6e'},
+                    {'symptom': 'Aches', 'color': '#acdcda'},
+                    {'symptom': 'Shortness of breath', 'color': '#50cca8'},
+                ]
             }
         },
         methods: {
@@ -121,9 +126,17 @@ am4core.useTheme(am4themes_material)
                     ];
                 
                 let colorSet = new am4core.ColorSet();
-                colorSet.list = ['#f57a6e', '#50cca8', '#acdcda'].map(function(color) {
-                    return new am4core.color(color)
-                })
+
+                let self = this
+
+                if (this.generalSymptoms.Stats)
+                    colorSet.list = this.generalSymptoms.Stats.map(function(item) {
+
+                        let index = self.colorSymptoms.map(function(x){ return x.symptom }).indexOf(item.symptom)
+
+                        return new am4core.color(self.colorSymptoms[index].color)
+
+                    })
 
                 pieSeries.colors = colorSet
             }        
@@ -138,6 +151,9 @@ am4core.useTheme(am4themes_material)
         },
         watch: {
             generalSymptoms: function(value) {
+                this.cough = 0
+                this.aches = 0
+                this.breath = 0
                 value.Stats.forEach(item => {
                     switch(item.symptom) {
                         case 'Cough':

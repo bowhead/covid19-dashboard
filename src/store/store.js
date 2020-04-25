@@ -19,6 +19,7 @@ export default new Vuex.Store({
         peopleHaveFever: [],
         peopleFeelIll: [],
         mapPoints: [],
+        howPeopleFeel: [],
         agesOrder: [
             '18-24',
             '25-34',
@@ -326,6 +327,7 @@ export default new Vuex.Store({
             state.peopleHaveFever = getData(data[7])
             state.peopleFeelIll = getData(data[8])
             state.mapPoints = getData(data[9])
+            state.howPeopleFeel = getData(data[10])
         },
         ADD_STATES(state, states) {
             if (states === null)
@@ -388,6 +390,9 @@ export default new Vuex.Store({
         },
         getMapStats: state => {
             return state.mapPoints
+        },
+        getHowPeopleFeelStats: state => {
+            return state.howPeopleFeel
         }
     }
 })

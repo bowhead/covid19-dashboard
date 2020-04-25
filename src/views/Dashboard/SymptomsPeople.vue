@@ -70,7 +70,15 @@ am4core.useTheme(am4themes_material)
                 severeBodyAches: 0,
                 coughPhlegm: 0,
                 severeHeadache: 0,
-                moderateBodyAches: 0
+                moderateBodyAches: 0,
+                colorSymptoms: [
+                    {'symptom': 'dry cough', 'color': '#acdcda'},
+                    {'symptom': 'moderate body aches', 'color': '#50cca8'},
+                    {'symptom': 'mild headaches', 'color': '#f57a6e'},
+                    {'symptom': 'severe headaches', 'color': '#fdcccd'},
+                    {'symptom': 'severe body aches', 'color': '#c0d7e0'},
+                    {'symptom': 'productive with phlegm', 'color': '#285150'},
+                ]
             }
         },
         methods: {
@@ -117,9 +125,22 @@ am4core.useTheme(am4themes_material)
                     ];
                 
                 let colorSet = new am4core.ColorSet();
-                colorSet.list = ['#285150', '#50cca8', '#f57a6e', '#fdcccd', '#c0d7e0', '#acdcda'].map(function(color) {
-                    return new am4core.color(color)
-                })
+                // colorSet.list = ['#285150', '#50cca8', '#f57a6e', '#fdcccd', '#c0d7e0', '#acdcda'].map(function(color) {
+                //     return new am4core.color(color)
+                // })
+
+                let self = this
+
+                if (this.peopleFeelIll.Stats)
+                    colorSet.list = this.peopleFeelIll.Stats.map(function(item) {
+
+                        let index = self.colorSymptoms.map(function(x){ return x.symptom }).indexOf(item.symptom)
+
+                        if (index !== -1) {
+                            return new am4core.color(self.colorSymptoms[index].color)
+                        }
+
+                    })
 
                 pieSeries.colors = colorSet
             }
@@ -134,9 +155,15 @@ am4core.useTheme(am4themes_material)
         },
         watch: {
             peopleFeelIll: function(value) {
+                this.coughPhlegm = 0
+                this.severeBodyAches = 0
+                this.dryCough = 0
+                this.moderateBodyAches = 0
+                this.mildHeadache = 0
+                this.severeHeadache = 0
                 value.Stats.forEach(item => {
                     switch(item.symptom) {
-                        case 'dry cough"':
+                        case 'dry cough':
                             this.dryCough = item.people
                             break;
                         case 'moderate body aches':

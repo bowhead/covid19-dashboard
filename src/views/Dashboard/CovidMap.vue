@@ -34,7 +34,10 @@ const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
                         data: self.mapPoints,
                         cluster: true,
                         clusterMaxZoom: 14, // Max zoom to cluster points on
-                        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+                        clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
+                        clusterProperties: {
+                            sum: ['+', ['get', 'people'], '2']
+                        }
                     });
 
                     self.map.addLayer({
@@ -62,7 +65,7 @@ const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
                         source: 'covid-people',
                         filter: ['has', 'point_count'],
                         layout: {
-                            'text-field': '{point_count_abbreviated}',
+                            'text-field': '{sum}',
                             'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
                             'text-size': 12
                         }

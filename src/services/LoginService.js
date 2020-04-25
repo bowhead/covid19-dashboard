@@ -39,7 +39,8 @@ export default {
         stats.push(apiClient.get('/getFeverStats' + qs))
         stats.push(apiClient.get('/getSymptomsPeopleFeelIllStats' + qs))
         stats.push(apiClient.get('/getMapStats' + qs))
-
+        stats.push(apiClient.get('/getHowPeopleFeel' + qs))
+        
         return axios.all(stats)
     },
     getStates(country) {

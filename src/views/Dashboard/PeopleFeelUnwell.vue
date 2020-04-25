@@ -110,6 +110,8 @@ am4core.useTheme(am4themes_material)
         },
         watch: {
             peopleFeelUnwell: function(value) {
+                this.fellIll = 0
+                this.fellTired = 0
                 value.Stats.forEach(item => {
                     switch(item.status) {
                         case 'Fell tired or exhausted':

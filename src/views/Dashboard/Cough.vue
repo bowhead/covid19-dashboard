@@ -76,6 +76,10 @@ am4core.useTheme(am4themes_material)
                 chart: null,
                 phlegm: 0,
                 dry: 0,
+                colorLevels: [
+                    {'level': 'dry', 'color': '#50cca8'},
+                    {'level': 'productive with phlegm', 'color': '#285150'},
+                ]
             }
         },
         methods: {
@@ -122,9 +126,20 @@ am4core.useTheme(am4themes_material)
                     ];
                 
                 let colorSet = new am4core.ColorSet();
-                colorSet.list = ['#50cca8', '#285150', '#f57a6e'].map(function(color) {
-                    return new am4core.color(color)
-                })
+                // colorSet.list = ['#50cca8', '#285150', '#f57a6e'].map(function(color) {
+                //     return new am4core.color(color)
+                // })
+
+                let self = this
+
+                if (this.cough.Stats)
+                    colorSet.list = this.cough.Stats.map(function(item) {
+
+                        let index = self.colorLevels.map(function(x){ return x.level }).indexOf(item.level)
+
+                        return new am4core.color(self.colorLevels[index].color)
+
+                    })
 
                 pieSeries.colors = colorSet
             }
@@ -139,9 +154,8 @@ am4core.useTheme(am4themes_material)
         },
         watch: {
             cough: function(value) {
-                this.mild = 0
-                this.severe = 0
-                this.moderate = 0
+                this.dry = 0
+                this.phlegm = 0
                 value.Stats.forEach(item => {
                     switch(item.level) {
                         case 'dry':

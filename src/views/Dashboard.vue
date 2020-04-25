@@ -399,6 +399,14 @@ export default {
         },
         clearFilters: function() {
             this.tags = []
+            this.seeDoctorOptionsSelected = []
+            this.covidTestOptionsSelected = []
+            this.smokerOptionsSelected = []
+            this.symptomsSelected = []
+            this.agesRangeSelected = []
+            this.gendersSelected = []
+            this.statesSelected = []
+            this.countriesSelected = []
         },
         addSeeDoctorSelected: function(option) {
             let index = this.seeDoctorOptionsSelected.indexOf(option.code)
