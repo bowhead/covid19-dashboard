@@ -6,9 +6,9 @@
       <navbar-toggle-button class="bg-warning" @click.native="showSidebar">
         <span class="navbar-toggler-icon"></span>
       </navbar-toggle-button>
-      <!-- <router-link class="navbar-brand bg-default" to="/">
+      <router-link class="navbar-brand bg-default" to="/">
         <img :src="logo" class="navbar-brand-img" alt="...">
-      </router-link> -->
+      </router-link>
 
       <slot name="mobile-right">
         <!-- <ul class="nav align-items-center d-md-none">
