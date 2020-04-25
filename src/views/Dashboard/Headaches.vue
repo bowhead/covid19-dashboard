@@ -2,7 +2,7 @@
     <card header-classes="bg_transparent" class="headaches">
         <div class="row" slot="header">
             <div class="col">
-                <h5 class="h5 mb-0">Headaches</h5>
+                <h5 class="h5 mb-0">{{ $t('dashboard.headaches') }}</h5>
             </div>
         </div>
 
@@ -10,10 +10,10 @@
             <div class="col-15 col-md-7">
                 <div class="row">
                     <div class="col-15 people-reported">
-                        People reported
+                        {{ $t('dashboard.peopleReported') }}
                     </div>
                     <div class="col-15 pt-1 number-people">
-                        12,146
+                        {{ headache.TotalPeopleReported }}
                     </div>
                 </div>
                 <div class="row">
@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-2"></span>
-                                Severe
+                                {{ $t('dashboard.severe') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                12,974
+                                {{ severe }}
                             </div>
                         </div>
                     </div>
@@ -32,10 +32,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-3"></span>
-                                Mild
+                                {{ $t('dashboard.mild') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                9,803
+                                {{ mild }}
                             </div>
                         </div>
                     </div>
@@ -45,10 +45,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-1"></span>
-                                Moderate
+                                {{ $t('dashboard.moderate') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                11,038
+                                {{ moderate }}
                             </div>
                         </div>
                     </div>
@@ -69,28 +69,23 @@ import am4themes_material from "@amcharts/amcharts4/themes/material"
 am4core.useTheme(am4themes_material)
 
     export default {
+        data() {
+            return {
+                chart: null,
+                severe: 0,
+                mild: 0,
+                moderate: 0
+            }
+        },
         methods: {
             loadChart() {
-                let chart = am4core.create(this.$refs.headacheschart, am4charts.PieChart)
+                this.chart = am4core.create(this.$refs.headacheschart, am4charts.PieChart)
 
-                chart.data = [
-                    {
-                        'status': 'Moderate',
-                        'people': 11038
-                    },
-                    {
-                        'status': 'Mild',
-                        'people': 9803
-                    },
-                    {
-                        'status': 'Severe',
-                        'people': 12974
-                    }
-                ]
+                this.chart.data = this.headache.Stats;
 
-                let pieSeries = chart.series.push(new am4charts.PieSeries())
+                let pieSeries = this.chart.series.push(new am4charts.PieSeries())
                 pieSeries.dataFields.value = 'people'
-                pieSeries.dataFields.category = 'status'
+                pieSeries.dataFields.category = 'level'
                 pieSeries.labels.template.disabled = false;
                 
                 pieSeries.ticks.template.disabled = true;
@@ -135,6 +130,34 @@ am4core.useTheme(am4themes_material)
         },
         mounted() {
             this.loadChart()
+        },
+        computed: {
+            headache() {
+                return this.$store.getters.getHeadachesStats
+            }
+        },
+        watch: {
+            headache: function(value) {
+                this.mild = 0
+                this.severe = 0
+                this.moderate = 0
+                value.Stats.forEach(item => {
+                    switch(item.level) {
+                        case 'mild':
+                            this.mild = item.people
+                            break;
+                        case 'severe':
+                            this.severe = item.people
+                            break;
+                        case 'moderate':
+                            this.moderate = item.people
+                            break;
+                    }
+                });
+
+                this.loadChart()
+                this.chart.invalidateRawData();
+            }
         }   
     }
 </script>

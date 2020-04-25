@@ -2,7 +2,7 @@
     <card header-classes="bg_transparent" class="people-tired">
         <div class="row" slot="header">
             <div class="col">
-                <h5 class="h5 mb-0 title">Symptoms of people who feel tired or exhausted</h5>
+                <h5 class="h5 mb-0 title">{{ $t('dashboard.peopleTiredExhausted') }}</h5>
             </div>
         </div>
 
@@ -10,7 +10,7 @@
             <div class="col-15 col-md-7">
                 <div class="row">
                     <div class="col-15 people-reported">
-                        People reported
+                        {{ $t('dashboard.peopleReported') }}
                     </div>
                     <div class="col-15 pt-1 number-people">
                         12,638
@@ -21,7 +21,7 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-1"></span>
-                                Recovered
+                                {{ $t('dashboard.recovered') }}
                             </div>
                             <div class="col-15 option-number-tag">
                                 10,482
@@ -32,7 +32,7 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-2"></span>
-                                Deaths
+                                {{ $t('dashboard.deaths') }}
                             </div>
                             <div class="col-15 option-number-tag">
                                 2,174
@@ -45,7 +45,7 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-3"></span>
-                                Confirmed
+                                {{ $t('dashboard.confirmed') }}
                             </div>
                             <div class="col-15 option-number-tag">
                                 25,482
@@ -56,7 +56,7 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-4"></span>
-                                Suspected
+                                {{ $t('dashboard.suspected') }}
                             </div>
                             <div class="col-15 option-number-tag">
                                 3,863

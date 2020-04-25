@@ -2,7 +2,7 @@
     <card header-classes="bg_transparent" class="people-co-morbitidites">
         <div class="row" slot="header">
             <div class="col">
-                <h5 class="h5 mb-0">People who feel unwell & co-morbitidites</h5>
+                <h5 class="h5 mb-0">{{ $t('dashboard.peopleCoMorbitidites') }}</h5>
             </div>
         </div>
 
@@ -10,10 +10,10 @@
             <div class="col-15 col-md-7">
                 <div class="row">
                     <div class="col-15 people-reported">
-                        People reported
+                        {{ $t('dashboard.peopleReported') }}
                     </div>
                     <div class="col-15 pt-1 number-people">
-                        42,008
+                        {{ coMorbitidites.TotalPeopleReported }}
                     </div>
                 </div>
                 <div class="row">
@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-2"></span>
-                                Asthma
+                                {{ $t('dashboard.asthma') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                12,974
+                                {{ asthma }}
                             </div>
                         </div>
                     </div>
@@ -32,10 +32,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-6"></span>
-                                Diabetes
+                                {{ $t('dashboard.diabetes') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                5,093
+                                {{ diabetes }}
                             </div>
                         </div>
                     </div>
@@ -45,10 +45,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-7"></span>
-                                Obesity
+                                {{ $t('dashboard.obesity') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                4,764
+                                {{ obesity }}
                             </div>
                         </div>
                     </div>
@@ -56,10 +56,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-3"></span>
-                                COPD
+                                {{ $t('dashboard.copd') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                9,803
+                                {{ copd }}
                             </div>
                         </div>
                     </div>
@@ -69,10 +69,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-5"></span>
-                                Hypertension
+                                {{ $t('dashboard.hypertension') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                2,947
+                                {{ hypertension }}
                             </div>
                         </div>
                     </div>
@@ -80,10 +80,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-1"></span>
-                                Others
+                                {{ $t('dashboard.others') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                11,038
+                                {{ other }}
                             </div>
                         </div>
                     </div>
@@ -104,40 +104,26 @@ import am4themes_material from "@amcharts/amcharts4/themes/material"
 am4core.useTheme(am4themes_material)
 
     export default {
+        data() {
+            return {
+                chart: null,
+                asthma: 0,
+                diabetes: 0,
+                obesity: 0,
+                copd: 0,
+                hypertension: 0,
+                other: 0
+            }
+        },
         methods: {
             loadChart() {
-                let chart = am4core.create(this.$refs.peoplecomorbitiditeschart, am4charts.PieChart)
+                this.chart = am4core.create(this.$refs.peoplecomorbitiditeschart, am4charts.PieChart)
 
-                chart.data = [
-                    {
-                        'illnes': 'Asthma',
-                        'people': 12974
-                    },
-                    {
-                        'illnes': 'Diabetes',
-                        'people': 5093
-                    },
-                    {
-                        'illnes': 'Obesity',
-                        'people': 2764
-                    },
-                    {
-                        'illnes': 'Hypertension',
-                        'people': 2947
-                    },
-                    {
-                        'illnes': 'COPD',
-                        'people': 9803
-                    },
-                    {
-                        'illnes': 'Others',
-                        'people': 11038
-                    }
-                ]
+                this.chart.data = this.coMorbitidites.Stats
 
-                let pieSeries = chart.series.push(new am4charts.PieSeries())
+                let pieSeries = this.chart.series.push(new am4charts.PieSeries())
                 pieSeries.dataFields.value = 'people'
-                pieSeries.dataFields.category = 'illnes'
+                pieSeries.dataFields.category = 'illness'
                 pieSeries.labels.template.disabled = false;
                 
                 pieSeries.ticks.template.disabled = true;
@@ -182,6 +168,40 @@ am4core.useTheme(am4themes_material)
         },
         mounted() {
             this.loadChart()
+        },
+        computed: {
+            coMorbitidites() {
+                return this.$store.getters.getPeopleCoMorbitiditesStats
+            }
+        },
+        watch: {
+            coMorbitidites: function(value) {
+                value.Stats.forEach(item => {
+                    switch(item.illness) {
+                        case 'Asthma':
+                            this.asthma = item.people
+                            break;
+                        case 'Diabetes':
+                            this.diabetes = item.people
+                            break;
+                        case 'Obesity':
+                            this.obesity = item.people
+                            break;
+                        case 'COPD':
+                            this.copd = item.people
+                        break;
+                        case 'Hypertension':
+                            this.hypertension = item.people
+                        break;
+                        case 'Other':
+                            this.other = item.people
+                        break;
+                    }
+                });
+
+                this.loadChart()
+                this.chart.invalidateRawData();
+            }
         }
     }
 </script>

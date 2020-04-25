@@ -2,7 +2,7 @@
     <card header-classes="bg_transparent" class="people-feel-unwell">
         <div class="row" slot="header">
             <div class="col">
-                <h5 class="h5 mb-0 title">People who feel unwell</h5>
+                <h5 class="h5 mb-0 title">{{ $t('dashboard.peopleFeelUnwell') }}</h5>
             </div>
         </div>
 
@@ -10,10 +10,10 @@
             <div class="col-15 col-md-6">
                 <div class="row">
                     <div class="col-15 people-reported">
-                        People reported
+                        {{ $t('dashboard.peopleReported') }}
                     </div>
                     <div class="col-15 pt-1 number-people">
-                        12,004
+                        {{ peopleFeelUnwell.TotalPeopleReported }}
                     </div>
                 </div>
                 <div class="row">
@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-2"></span>
-                                Fell ill
+                                {{ $t('dashboard.fellIll') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                4,213
+                                {{ fellIll }}
                             </div>
                         </div>
                     </div>
@@ -34,10 +34,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-1"></span>
-                                Fell tired or exhausted
+                                {{ $t('dashboard.fellTired') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                7,357
+                                {{ fellTired }}
                             </div>
                         </div>
                     </div>
@@ -58,24 +58,20 @@ import am4themes_material from "@amcharts/amcharts4/themes/material"
 am4core.useTheme(am4themes_material)
 
     export default {
+        data() {
+            return {
+                chart: null,
+                fellIll: 0,
+                fellTired: 0,
+            }
+        },
         methods: {
             loadChart() {
-                let chart = am4core.create(this.$refs.peoplefellunwellchart, am4charts.XYChart)
+                this.chart = am4core.create(this.$refs.peoplefellunwellchart, am4charts.XYChart)
 
-                chart.data = [
-                    {
-                        'status': 'Fell ill',
-                        'people': 36.41,
-                        'color': '#f57a6e'
-                    },
-                    {
-                        'status': 'Fell tired or exhausted',
-                        'people': 63.59,
-                        'color': '#50cca8'
-                    }
-                ]
+                this.chart.data = this.peopleFeelUnwell.Stats;
 
-                let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+                let categoryAxis = this.chart.xAxes.push(new am4charts.CategoryAxis())
                 categoryAxis.dataFields.category = "status"
                 categoryAxis.renderer.grid.template.location = 0;
                 categoryAxis.renderer.minGridDistance = 20;
@@ -86,15 +82,15 @@ am4core.useTheme(am4themes_material)
                 label.maxWidth = 120
                 label.fontSize = '11'
 
-                let valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
+                let valueAxis = this.chart.yAxes.push(new am4charts.ValueAxis())
                 valueAxis.title.text = "Patients %";
                 valueAxis.title.fontSize = '12'
                 valueAxis.title.fill = '#c6c7c8'
                 valueAxis.fill = '#c6c7c8'
                 valueAxis.fontSize = '12'
-                valueAxis.max = 100;
+                valueAxis.max = this.peopleFeelUnwell.TotalPeopleReported;
 
-                var series = chart.series.push(new am4charts.ColumnSeries());
+                var series = this.chart.series.push(new am4charts.ColumnSeries());
                 series.dataFields.valueY = "people";
                 series.dataFields.categoryX = "status";
                 series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
@@ -106,6 +102,28 @@ am4core.useTheme(am4themes_material)
         },
         mounted() {
             this.loadChart()
+        },
+        computed: {
+            peopleFeelUnwell() {
+                return this.$store.getters.getPeopleFeelUnwell
+            }
+        },
+        watch: {
+            peopleFeelUnwell: function(value) {
+                value.Stats.forEach(item => {
+                    switch(item.status) {
+                        case 'Fell tired or exhausted':
+                            this.fellTired = item.people
+                            break;
+                        case 'Fell ill':
+                            this.fellIll = item.people
+                            break;
+                    }
+                });
+
+                this.loadChart()
+                this.chart.invalidateRawData();
+            }
         }
     }
 </script>

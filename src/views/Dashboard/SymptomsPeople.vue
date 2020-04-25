@@ -2,7 +2,7 @@
     <card header-classes="bg_transparent" class="symptoms-people">
         <div class="row" slot="header">
             <div class="col">
-                <h5 class="h5 mb-0">Symptoms of people who feel ill</h5>
+                <h5 class="h5 mb-0">{{ $t('dashboard.peopleFeelIll') }}</h5>
             </div>
         </div>
 
@@ -10,40 +10,40 @@
             <div class="col-15 col-md-7">
                 <div class="row">
                     <div class="col-15 people-reported">
-                        People reported
+                        {{ $t('dashboard.peopleReported') }}
                     </div>
                     <div class="col-15 pt-1 number-people">
-                        42,008
+                        {{ peopleFeelIll.TotalPeopleReported }}
                     </div>
                 </div>
                 <div class="row pt-1">
                     <div class="col-7 option-tag">
                         <span class="dot-2"></span>
-                        Headaches mild
+                        {{ $t('dashboard.headachesMild') }}
                     </div>
                     <div class="col-7 option-tag">
                         <span class="dot-6"></span>
-                        Severe cough
+                        {{ $t('dashboard.severeCough') }}
                     </div>
                 </div>
                 <div class="row pt-1">
                     <div class="col-7 option-tag">
                         <span class="dot-7"></span>
-                        Severe body aches
+                        {{ $t('dashboard.severeBodyAches') }}
                     </div>
                     <div class="col-7 option-tag">
                         <span class="dot-3"></span>
-                        Mild cough
+                        {{ $t('dashboard.mildCough') }}
                     </div>
                 </div>
                 <div class="row pt-1">
                     <div class="col-7 option-tag">
                         <span class="dot-5"></span>
-                        Severe headaches
+                        {{ $t('dashboard.severeHeadaches') }}
                     </div>
                     <div class="col-7 option-tag">
                         <span class="dot-1"></span>
-                        Moderate body aches
+                        {{ $t('dashboard.moderateBodyAches') }}
                     </div>
                 </div>
             </div>
@@ -62,38 +62,24 @@ import am4themes_material from "@amcharts/amcharts4/themes/material"
 am4core.useTheme(am4themes_material)
 
     export default {
+        data() {
+            return {
+                chart: null,
+                mildHeadache: 0,
+                dryCough: 0,
+                severeBodyAches: 0,
+                coughPhlegm: 0,
+                severeHeadache: 0,
+                moderateBodyAches: 0
+            }
+        },
         methods: {
             loadChart() {
-                let chart = am4core.create(this.$refs.symptomspeoplechart, am4charts.PieChart)
+                this.chart = am4core.create(this.$refs.symptomspeoplechart, am4charts.PieChart)
 
-                chart.data = [
-                    {
-                        'symptom': 'Headaches mild',
-                        'people': 1038
-                    },
-                    {
-                        'symptom': 'Severe cough',
-                        'people': 9003
-                    },
-                    {
-                        'symptom': 'Severe body aches',
-                        'people': 18974
-                    },
-                    {
-                        'symptom': 'Mild cough',
-                        'people': 11038
-                    },
-                    {
-                        'symptom': 'Severe headaches',
-                        'people': 9803
-                    },
-                    {
-                        'symptom': 'Moderate body aches',
-                        'people': 12974
-                    }
-                ]
+                this.chart.data = this.peopleFeelIll.Stats
 
-                let pieSeries = chart.series.push(new am4charts.PieSeries())
+                let pieSeries = this.chart.series.push(new am4charts.PieSeries())
                 pieSeries.dataFields.value = 'people'
                 pieSeries.dataFields.category = 'symptom'
                 pieSeries.labels.template.disabled = false;
@@ -140,7 +126,41 @@ am4core.useTheme(am4themes_material)
         },
         mounted() {
             this.loadChart()
-        }   
+        },
+        computed: {
+            peopleFeelIll() {
+                return this.$store.getters.getPeopleFeelIllStats
+            }
+        },
+        watch: {
+            peopleFeelIll: function(value) {
+                value.Stats.forEach(item => {
+                    switch(item.symptom) {
+                        case 'dry cough"':
+                            this.dryCough = item.people
+                            break;
+                        case 'moderate body aches':
+                            this.moderateBodyAches = item.people
+                            break;
+                        case 'mild headaches':
+                            this.mildHeadache = item.people
+                            break;
+                        case 'severe headaches':
+                            this.severeHeadache = item.people
+                            break;
+                        case 'severe body aches':
+                            this.severeBodyAches = item.people
+                            break;
+                        case 'productive with phlegm':
+                            this.coughPhlegm = item.people
+                            break;
+                    }
+                });
+
+                this.loadChart()
+                this.chart.invalidateRawData();   
+            }
+        }
     }
 </script>
 

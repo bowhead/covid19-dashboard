@@ -2,7 +2,7 @@
     <card header-classes="bg_transparent" class="general-symptoms">
         <div class="row" slot="header">
             <div class="col">
-                <h5 class="h5 mb-0">General Symptoms</h5>
+                <h5 class="h5 mb-0">{{ $t('dashboard.generalSymptoms') }}</h5>
             </div>
         </div>
 
@@ -10,10 +10,10 @@
             <div class="col-15 col-md-7">
                 <div class="row">
                     <div class="col-15 people-reported">
-                        People reported
+                        {{ $t('dashboard.peopleReported') }}
                     </div>
                     <div class="col-15 pt-1 number-people">
-                        39,572
+                        {{ generalSymptoms.TotalPeopleReported }}
                     </div>
                 </div>
                 <div class="row">
@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-2"></span>
-                                Cough
+                                {{ $t('dashboard.cough') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                21,019
+                                {{ cough }}
                             </div>
                         </div>
                     </div>
@@ -32,10 +32,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-6"></span>
-                                Aches
+                                {{ $t('dashboard.aches') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                5,946
+                                {{ aches }}
                             </div>
                         </div>
                     </div>
@@ -45,10 +45,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-1"></span>
-                                Shortness of breath
+                                {{ $t('dashboard.shortness') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                13,428
+                                {{ breath }}
                             </div>
                         </div>
                     </div>
@@ -69,26 +69,21 @@ import am4themes_material from "@amcharts/amcharts4/themes/material"
 am4core.useTheme(am4themes_material)
 
     export default {
+        data() {
+            return {
+                chart: null,
+                cough: 0,
+                aches: 0,
+                breath: 0
+            }
+        },
         methods: {
             loadChart() {
-                let chart = am4core.create(this.$refs.generalsymptomschart, am4charts.PieChart)
+                this.chart = am4core.create(this.$refs.generalsymptomschart, am4charts.PieChart)
 
-                chart.data = [
-                    {
-                        'symptom': 'Cough',
-                        'people': 21019
-                    },
-                    {
-                        'symptom': 'shortness of breath',
-                        'people': 13428
-                    },
-                    {
-                        'symptom': 'Aches',
-                        'people': 5946
-                    }
-                ]
+                this.chart.data = this.generalSymptoms.Stats
 
-                let pieSeries = chart.series.push(new am4charts.PieSeries())
+                let pieSeries = this.chart.series.push(new am4charts.PieSeries())
                 pieSeries.dataFields.value = 'people'
                 pieSeries.dataFields.category = 'symptom'
                 pieSeries.labels.template.disabled = false;
@@ -135,6 +130,31 @@ am4core.useTheme(am4themes_material)
         },
         mounted() {
             this.loadChart();
+        },
+        computed: {
+            generalSymptoms() {
+                return this.$store.getters.getGeneralSymptomsStats
+            }
+        },
+        watch: {
+            generalSymptoms: function(value) {
+                value.Stats.forEach(item => {
+                    switch(item.symptom) {
+                        case 'Cough':
+                            this.cough = item.people
+                            break;
+                        case 'Aches':
+                            this.aches = item.people
+                            break;
+                        case 'Shortness of breath':
+                            this.breath = item.people
+                            break;
+                    }
+                });
+
+                this.loadChart()
+                this.chart.invalidateRawData();      
+            }
         }
     }
 </script>
