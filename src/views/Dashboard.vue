@@ -133,32 +133,34 @@
                 </div>
             </div>
             <div class="row mt-3">
-                <div class="col-15 col-md-5">
+                <!-- <div class="col-15 col-md-5">
                     <people-have-fever></people-have-fever>
-                </div>
+                </div> -->
                 <div class="col-15 col-md-5">
                     <people-feeling-unwell></people-feeling-unwell>
                 </div>
                 <div class="col-15 col-md-5">
                     <people-co-morbitidites></people-co-morbitidites>
                 </div>
-            </div>
-            <div class="row mt-3">
                 <div class="col-15 col-md-5">
                     <cough></cough>
                 </div>
+            </div>
+            <div class="row mt-3">
+                
                 <div class="col-15 col-md-5">
                     <headaches></headaches>
                 </div>
                 <div class="col-15 col-md-5">
                     <body-aches></body-aches>
                 </div>
-            </div>
-            <div class="row mt-3">
                 <div class="col-15 col-md-5">
                     <symptom-people></symptom-people>
                 </div>
             </div>
+            <!-- <div class="col-15 col-md-5">
+                    <symptom-people></symptom-people>
+                </div> -->
         </div>
     </div>
 </template>
