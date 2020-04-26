@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-2"></span>
-                                {{ $t('dashboard.fellIll') }}
+                                {{ $t('dashboard.feelIll') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                {{ fellIll }}
+                                {{ feelIll }}
                             </div>
                         </div>
                     </div>
@@ -34,17 +34,17 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-1"></span>
-                                {{ $t('dashboard.fellTired') }}
+                                {{ $t('dashboard.feelTired') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                {{ fellTired }}
+                                {{ feelTired }}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-15 col-md-9">
-                <div class="people-fell-unwell-chart" ref="peoplefellunwellchart"></div>
+                <div class="people-feel-unwell-chart" ref="peoplefeelunwellchart"></div>
             </div>          
         </div>
     </card>
@@ -61,13 +61,13 @@ am4core.useTheme(am4themes_material)
         data() {
             return {
                 chart: null,
-                fellIll: 0,
-                fellTired: 0,
+                feelIll: 0,
+                feelTired: 0,
             }
         },
         methods: {
             loadChart() {
-                this.chart = am4core.create(this.$refs.peoplefellunwellchart, am4charts.XYChart)
+                this.chart = am4core.create(this.$refs.peoplefeelunwellchart, am4charts.XYChart)
 
                 this.chart.data = this.peopleFeelUnwell.Stats;
 
@@ -112,11 +112,11 @@ am4core.useTheme(am4themes_material)
             peopleFeelUnwell: function(value) {
                 value.Stats.forEach(item => {
                     switch(item.status) {
-                        case 'Fell tired or exhausted':
-                            this.fellTired = item.people
+                        case 'Feel tired or exhausted':
+                            this.feelTired = item.people
                             break;
-                        case 'Fell ill':
-                            this.fellIll = item.people
+                        case 'Feel ill':
+                            this.feelIll = item.people
                             break;
                     }
                 });
@@ -161,7 +161,7 @@ am4core.useTheme(am4themes_material)
     font-size: 21px;
 }
 
-.people-fell-unwell-chart {
+.people-feel-unwell-chart {
     height: 300px;
 }
 </style>
