@@ -74,7 +74,12 @@ am4core.useTheme(am4themes_material)
                 chart: null,
                 severe: 0,
                 mild: 0,
-                moderate: 0     
+                moderate: 0,
+                colorLevels: [
+                    {'level': 'severe', 'color': '#f57a6e'},
+                    {'level': 'mild', 'color': '#285150'},
+                    {'level': 'moderate', 'color': '#50cca8'},
+                ]
             }
         },
         methods: {
@@ -112,7 +117,6 @@ am4core.useTheme(am4themes_material)
                 pieSeries.slices.template.strokeWidth = 2;
 
                 pieSeries.slices.template
-                    // change the cursor on hover to make it apparent the object can be interacted with
                     .cursorOverStyle = [
                         {
                             "property": "cursor",
@@ -121,9 +125,17 @@ am4core.useTheme(am4themes_material)
                     ];
                 
                 let colorSet = new am4core.ColorSet();
-                colorSet.list = ['#285150', '#f57a6e', '#50cca8'].map(function(color) {
-                    return new am4core.color(color)
-                })
+
+                let self = this
+
+                if (this.bodyAches.Stats)
+                    colorSet.list = this.bodyAches.Stats.map(function(item) {
+
+                        let index = self.colorLevels.map(function(x){ return x.level }).indexOf(item.level)
+
+                        return new am4core.color(self.colorLevels[index].color)
+
+                    })
 
                 pieSeries.colors = colorSet
             }

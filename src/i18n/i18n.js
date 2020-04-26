@@ -62,7 +62,9 @@ export default new VueI18n({
                 severeBodyAches: 'Severe body aches',
                 mildCough: 'Mild cough',
                 severeHeadaches: 'Severe headaches',
-                moderateBodyAches: 'Moderate body aches'
+                moderateBodyAches: 'Moderate body aches',
+                feelWell: 'Feel Well',
+                feelUnwell: 'Feel Unwell'
             }
         }  
     }

@@ -74,7 +74,12 @@ am4core.useTheme(am4themes_material)
                 chart: null,
                 severe: 0,
                 mild: 0,
-                moderate: 0
+                moderate: 0,
+                colorLevels: [
+                    {'level': 'severe', 'color': '#f57a6e'},
+                    {'level': 'mild', 'color': '#285150'},
+                    {'level': 'moderate', 'color': '#50cca8'},
+                ]
             }
         },
         methods: {
@@ -121,9 +126,16 @@ am4core.useTheme(am4themes_material)
                     ];
                 
                 let colorSet = new am4core.ColorSet();
-                colorSet.list = ['#f57a6e' ,'#50cca8', '#285150'].map(function(color) {
-                    return new am4core.color(color)
-                })
+
+                let self = this
+
+                if (this.headache.Stats)
+                    colorSet.list = this.headache.Stats.map(function(item) {
+
+                        let index = self.colorLevels.map(function(x){ return x.level }).indexOf(item.level)
+
+                        return new am4core.color(self.colorLevels[index].color)
+                    })
 
                 pieSeries.colors = colorSet
             }

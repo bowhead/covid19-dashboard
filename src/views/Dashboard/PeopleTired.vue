@@ -13,7 +13,7 @@
                         {{ $t('dashboard.peopleReported') }}
                     </div>
                     <div class="col-15 pt-1 number-people">
-                        12,638
+                        {{ howPeopleFeel.TotalPeopleReported }}
                     </div>
                 </div>
                 <div class="row">
@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-1"></span>
-                                {{ $t('dashboard.recovered') }}
+                                {{ $t('dashboard.feelWell') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                10,482
+                                {{ feelWell }}
                             </div>
                         </div>
                     </div>
@@ -32,15 +32,15 @@
                         <div class="row">
                             <div class="col-15 option-tag">
                                 <span class="dot-2"></span>
-                                {{ $t('dashboard.deaths') }}
+                                {{ $t('dashboard.feelUnwell') }}
                             </div>
                             <div class="col-15 option-number-tag">
-                                2,174
+                                {{ feelUnwell }}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-7">
                         <div class="row">
                             <div class="col-15 option-tag">
@@ -63,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="col-15 col-md-8">
                 <div class="people-tired-chart" ref="peopletiredchart"></div>
@@ -82,35 +82,24 @@ am4core.useTheme(am4themes_material)
     export default {
         data() {
             return {
-                chart: null
+                chart: null,
+                feelWell: 0,
+                feelUnwell: 0,
+                colorFeels: [
+                    {'feel': 'Feel well', 'color': '#50cca8'},
+                    {'feel': 'Feel unwell', 'color': '#f57a6e'},
+                ]
             }
         },
         methods: {
             loadChart() {
-                let chart = am4core.create(this.$refs.peopletiredchart, am4charts.PieChart)
+                this.chart = am4core.create(this.$refs.peopletiredchart, am4charts.PieChart)
 
-                chart.data = [
-                    {
-                        'status': 'Recovered',
-                        'people': 10482
-                    },
-                    {
-                        'status': 'Confirmed',
-                        'people': 25482
-                    },
-                    {
-                        'status': 'Suspected',
-                        'people': 3863
-                    },
-                    {
-                        'status': 'Deaths',
-                        'people': 2174
-                    }
-                ]
+                this.chart.data = this.howPeopleFeel.Stats
 
-                let pieSeries = chart.series.push(new am4charts.PieSeries())
+                let pieSeries = this.chart.series.push(new am4charts.PieSeries())
                 pieSeries.dataFields.value = 'people'
-                pieSeries.dataFields.category = 'status'
+                pieSeries.dataFields.category = 'feel'
                 pieSeries.labels.template.disabled = false;
                 
                 pieSeries.ticks.template.disabled = true;
@@ -137,7 +126,6 @@ am4core.useTheme(am4themes_material)
                 pieSeries.slices.template.strokeWidth = 2;
 
                 pieSeries.slices.template
-                    // change the cursor on hover to make it apparent the object can be interacted with
                     .cursorOverStyle = [
                         {
                             "property": "cursor",
@@ -146,15 +134,47 @@ am4core.useTheme(am4themes_material)
                     ];
                 
                 let colorSet = new am4core.ColorSet();
-                colorSet.list = ['#50cca8', '#285150', '#7eadb3', '#f57a6e'].map(function(color) {
-                    return new am4core.color(color)
-                })
+
+                let self = this
+
+                if (this.howPeopleFeel.Stats)
+                    colorSet.list = this.howPeopleFeel.Stats.map(function(item) {
+
+                        let index = self.colorFeels.map(function(x){ return x.feel }).indexOf(item.feel)
+
+                        return new am4core.color(self.colorFeels[index].color)
+
+                    })
 
                 pieSeries.colors = colorSet
             }
         },
         mounted() {
             this.loadChart();
+        },
+        computed: {
+            howPeopleFeel() {
+                return this.$store.getters.getHowPeopleFeelStats
+            }
+        },
+        watch: {
+            howPeopleFeel: function(value) {
+                this.feelWell = 0
+                this.feelUnwell = 0
+                value.Stats.forEach(item => {
+                    switch(item.feel) {
+                        case 'Feel well':
+                            this.feelWell = item.people
+                            break;
+                        case 'Feel unwell':
+                            this.feelUnwell = item.people
+                            break;
+                    }
+                })
+
+                this.loadChart()
+                this.chart.invalidateRawData();   
+            }
         }
     }
 </script>

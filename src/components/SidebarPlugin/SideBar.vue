@@ -11,7 +11,7 @@
       </router-link>
 
       <slot name="mobile-right">
-        <ul class="nav align-items-center d-md-none">
+        <!-- <ul class="nav align-items-center d-md-none">
           <base-dropdown class="nav-item" position="right">
             <a slot="title" class="nav-link nav-link-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="ni ni-bell-55"></i>
@@ -56,7 +56,7 @@
               <span>Logout</span>
             </a>
           </base-dropdown>
-        </ul>
+        </ul> -->
       </slot>
       <slot></slot>
       <div v-show="$sidebar.showSidebar" class="navbar-collapse collapse show" id="sidenav-collapse-main">
