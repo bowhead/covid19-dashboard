@@ -59,6 +59,10 @@ import * as am4core from "@amcharts/amcharts4/core"
 import * as am4charts from "@amcharts/amcharts4/charts"
 import am4themes_material from "@amcharts/amcharts4/themes/material"
 
+if (process.env.NODE_ENV == 'production'){
+    am4core.options.commercialLicense = true
+}
+
 am4core.useTheme(am4themes_material)
 
     export default {
