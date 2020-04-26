@@ -81,7 +81,7 @@ am4core.useTheme(am4themes_material)
                     {'symptom': 'mild headaches', 'color': '#f57a6e'},
                     {'symptom': 'severe headaches', 'color': '#fdcccd'},
                     {'symptom': 'severe body aches', 'color': '#c0d7e0'},
-                    {'symptom': 'productive with phlegm', 'color': '#285150'},
+                    {'symptom': 'productive with phlegm cough', 'color': '#285150'},
                 ]
             }
         },
@@ -135,17 +135,15 @@ am4core.useTheme(am4themes_material)
 
                 let self = this
 
-                if (this.peopleFeelIll.Stats)
+                if (this.peopleFeelIll.Stats) {
                     colorSet.list = this.peopleFeelIll.Stats.map(function(item) {
-
                         let index = self.colorSymptoms.map(function(x){ return x.symptom }).indexOf(item.symptom)
 
                         if (index !== -1) {
                             return new am4core.color(self.colorSymptoms[index].color)
                         }
-
                     })
-
+                }
                 pieSeries.colors = colorSet
             }
         },
