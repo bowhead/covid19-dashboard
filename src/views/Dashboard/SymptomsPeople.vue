@@ -125,7 +125,9 @@ am4core.useTheme(am4themes_material)
             }
         },
         mounted() {
-            this.loadChart()
+            if (this.peopleFeelIll.Stats && this.peopleFeelIll.Stats.length) {
+                this.loadChart()
+            }
         },
         computed: {
             peopleFeelIll() {
